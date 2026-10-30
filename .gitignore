@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+models/*.keras
+reports/*.png
+reports/*.json
+
+salida_*.txt
+codigo_lab10.txt
+*.bak
+models/*.keras
+
+salida_*.txt
+codigo_lab10.txt
+*.bak
+models/*.keras

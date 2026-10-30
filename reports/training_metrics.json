@@ -1,0 +1,6 @@
+{
+  "ae_train_seconds": 9.191489799879491,
+  "vae_train_seconds": 16.499158299993724,
+  "ae_parameters": 25888,
+  "decoder_parameters": 101520
+}

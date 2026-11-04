@@ -20,6 +20,7 @@ Fashion-MNIST (Xiao, Rasul y Vollgraf, 2017), de Zalando Research, licencia MIT:
 | `reports/` | Tabla, CSV por semilla, resumen JSON y figuras `e06_*.png` |
 | `notebooks/E06_resultados.ipynb` | Lectura e interpretación de los resultados |
 | `MODEL_CARD.md` | Tarjeta del modelo: uso previsto, límites y decisión |
+| `models/` | Modelos entrenados (`.keras`) de las 3 semillas y `MANIFEST.json` con sus hashes |
 | `AI_USE_DECLARATION.md` | Declaración de uso de IA |
 
 ## Reproducir
@@ -33,7 +34,7 @@ uv run python scripts/e06_evaluacion.py --seeds 42 43 44    # unos 5 a 8 minutos
 uv run jupyter nbconvert --to notebook --execute --inplace notebooks/E06_resultados.ipynb
 ```
 
-Prueba rápida (menos de 1 minuto): `uv run python scripts/e06_evaluacion.py --seeds 42 --limit 6000 --epochs-ae 2 --epochs-vae 2`.
+Prueba rápida (menos de 1 minuto): `uv run python scripts/e06_evaluacion.py --seeds 42 --limit 6000 --epochs-ae 2 --epochs-vae 2` (guarda sus modelos en `models_prueba/`, que no se sube, para no sobrescribir los de `models/`).
 Entorno de los resultados: Python 3.12.13, TensorFlow 2.21.0, Windows-11-10.0.26200-SP0, solo CPU. Semillas 42, 43 y 44; 6 épocas para el AE y 8 para el VAE (los valores por defecto del laboratorio). Con `TF_DETERMINISTIC_OPS=1`, otra máquina u otra versión de TensorFlow puede dar cifras ligeramente distintas.
 
 ## Modelos comparados
@@ -78,12 +79,16 @@ Significado: *Fréchet píxeles* es una distancia de Fréchet calculada sobre p�
 1. **Reconstrucción.** VAE-16 reconstruye mejor (MSE 0.0165 ± 0.0001) que AE-16 (0.0206 ± 0.0004), pero con 8 veces más parámetros. Con 2 dimensiones el error es mucho mayor (VAE-2 0.0330 ± 0.0001; AE-2 0.0585 ± 0.0001): el vestido se reconstruye como pantalón y las prendas de torso se confunden. En ningún modelo hay brecha entre entrenamiento y prueba (del orden de 1e-4): no hay sobreajuste de reconstrucción.
 2. **Muestreo.** Un AE muestreado con `N(0, I)` colapsa: casi todas las muestras caen en una sola clase (1.3 de 10) aunque el clasificador esté muy seguro (0.97), así que la confianza no mide calidad. Con una gaussiana ajustada el AE-16 llega a Fréchet 15.3 ± 1.1, parecido al de VAE-16 (17.5 ± 0.7); fue ligeramente mejor en las 3 semillas, pero con solo 3 semillas no se concluye. VAE-16 tiene la ventaja de muestrear directamente de `N(0, I)`, sin paso posterior. Ninguna muestra se acerca al piso de ruido (3.8) y todas son borrosas.
 3. **Diversidad.** Todos quedan por debajo de las imágenes reales (0.46 a 0.88): las muestras son más parecidas entre sí. VAE-2 cubre 9.3 clases pero con muchas muestras tenues y poco nítidas.
-4. **Memoria.** No se encontró evidencia de memorización: ninguna copia exacta, brecha entrenamiento-prueba cercana a cero y vecinos visualmente distintos de las muestras. Solo VAE-2 muestra la señal métrica de Vecino/real menor que 1 (0.77 ± 0.04) y 14 % de casi copias, pero las figuras `e06_memoria_vae2.png` muestran que las muestras más cercanas son manchas casi negras cuyo vecino es una prenda oscura: la distancia en píxeles es pequeña porque ambas imágenes son oscuras, no porque se haya copiado. Esa métrica es sensible al brillo y por sí sola no prueba memorización.
+4. **Memoria.** No se encontró evidencia de memorización: ninguna copia exacta, brecha entrenamiento-prueba cercana a cero y vecinos visualmente distintos de las muestras. Solo VAE-2 muestra la señal métrica de Vecino/real menor que 1 (0.77 ± 0.04) y 14 % de casi copias, pero las figuras `e06_memoria_vae2.png` muestran que las muestras más cercanas son manchas casi negras cuyo vecino es una prenda oscura: una explicación plausible, que **no se demostró**, es que la distancia en píxeles resulte pequeña porque ambas imágenes son oscuras; no se probó que el brillo sea la causa ni se descartaron otras. Esa métrica es sensible al brillo y por sí sola ni prueba ni descarta memorización, así que la conclusión se limita a que no se encontró evidencia con estas revisiones. Queda pendiente repetir la comparación con una distancia que no dependa del brillo (por ejemplo, tras normalizar cada imagen).
 5. **Costo.** El AE tarda unos 7 s y el VAE unos 15 s en CPU; los parámetros pasan de 26 mil (AE-16) a 208 mil (VAE-16) y el archivo de 331 KB a 854 KB. Los tiempos de inferencia (unos 200 ms por 1,000 imágenes) no difieren más que su variación.
 
 ## Decisión
 
-Para generar imágenes nuevas al estilo Fashion-MNIST con un muestreo simple, **se elige VAE-16**: es el mejor reconstructor, cubre las 10 clases y se muestrea sin pasos adicionales. **AE-16 con gaussiana ajustada** es una alternativa más barata (8 veces menos parámetros, la mitad del tiempo) con calidad de muestras comparable. **VAE-2** solo sirve para visualizar el espacio latente (la app de Streamlit del laboratorio), no como generador. Uso solo académico y exploratorio; ver límites en `MODEL_CARD.md`.
+Resultado exploratorio, válido solo para este dominio (Fashion-MNIST, 28×28 en gris, 3 semillas): para generar imágenes nuevas con un muestreo simple, **VAE-16 fue la mejor opción entre las comparadas**: es el mejor reconstructor, cubre las 10 clases y se muestrea sin pasos adicionales. **AE-16 con gaussiana ajustada** es una alternativa más barata (8 veces menos parámetros, la mitad del tiempo) con calidad de muestras comparable. **VAE-2** solo sirve para visualizar el espacio latente (la app de Streamlit del laboratorio), no como generador. Estas recomendaciones son resultados exploratorios de este dominio y no se deben extrapolar a otros; ver límites en `MODEL_CARD.md`.
+
+## Modelos conservados
+
+La evaluación guarda los modelos entrenados de cada semilla en `models/semilla_<n>/` (autoencoders completos, encoders y decoders de los VAE y el clasificador auxiliar, en formato `.keras`) y registra su tamaño y su hash SHA-256 en `models/MANIFEST.json`. Sirven para repetir revisiones sin volver a entrenar. Para comprobar que coinciden con el manifiesto y que cargan: `uv run python scripts/verificar_modelos.py`.
 
 ## Límites
 

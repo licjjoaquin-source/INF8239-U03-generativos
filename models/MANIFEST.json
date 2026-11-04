@@ -1,0 +1,160 @@
+{
+  "tensorflow": "2.21.0",
+  "semillas": [
+    42,
+    43,
+    44
+  ],
+  "epocas_ae": 6,
+  "epocas_vae": 8,
+  "nota": "Modelos entrenados de la evaluación E06 (formato .keras). Verificar con scripts/verificar_modelos.py",
+  "archivos": [
+    {
+      "archivo": "semilla_42/AE-16__autoencoder.keras",
+      "semilla": 42,
+      "parametros": 25888,
+      "bytes": 338597,
+      "sha256": "0072eec3f500722bfb81d539fdd71455e554e3e4a4dbd516812ea6dea4505a0a"
+    },
+    {
+      "archivo": "semilla_42/AE-2__autoencoder.keras",
+      "semilla": 42,
+      "parametros": 3922,
+      "bytes": 75002,
+      "sha256": "94d9fc9928af19f6bfe32d4767bfa7d2b544b172347d196947e9435fd60601da"
+    },
+    {
+      "archivo": "semilla_42/VAE-2__encoder.keras",
+      "semilla": 42,
+      "parametros": 100996,
+      "bytes": 427308,
+      "sha256": "9b7505d030a6d05ad143d2facd64dcba1ece5e63ffe0609035cd3b1265f67376"
+    },
+    {
+      "archivo": "semilla_42/VAE-2__decoder.keras",
+      "semilla": 42,
+      "parametros": 101520,
+      "bytes": 425626,
+      "sha256": "7ad89a9d512f7e704cb6253feed25cde858b4847ddcec29f81f319b29cea0380"
+    },
+    {
+      "archivo": "semilla_42/VAE-16__encoder.keras",
+      "semilla": 42,
+      "parametros": 104608,
+      "bytes": 441758,
+      "sha256": "34a99d106b6ee7b596c81a4d36bc991058816734ec29c275a8b445df54993292"
+    },
+    {
+      "archivo": "semilla_42/VAE-16__decoder.keras",
+      "semilla": 42,
+      "parametros": 103312,
+      "bytes": 432797,
+      "sha256": "a9435c7a56977635e7ab5dcdcab2f78eb691177c3924901a800440f093beb898"
+    },
+    {
+      "archivo": "semilla_42/clasificador_auxiliar.keras",
+      "semilla": 42,
+      "parametros": 101770,
+      "bytes": 1244522,
+      "sha256": "077917ae36019d9e8834483e130cdd50e1c832918343004019490afe8650ecde"
+    },
+    {
+      "archivo": "semilla_43/AE-16__autoencoder.keras",
+      "semilla": 43,
+      "parametros": 25888,
+      "bytes": 338597,
+      "sha256": "0aa7ca8c2f6069d1c8494bc9d82066f87303526660fbb1f1bd2611c02ff17475"
+    },
+    {
+      "archivo": "semilla_43/AE-2__autoencoder.keras",
+      "semilla": 43,
+      "parametros": 3922,
+      "bytes": 75002,
+      "sha256": "584c4aece631142efc4a0e93a4d4e665f5156df1026ec8e83389da1b6e91aab2"
+    },
+    {
+      "archivo": "semilla_43/VAE-2__encoder.keras",
+      "semilla": 43,
+      "parametros": 100996,
+      "bytes": 427308,
+      "sha256": "16eb90d913e666b8e00f88cbd46a7d17505b350def9e476f17bfc77e579f7636"
+    },
+    {
+      "archivo": "semilla_43/VAE-2__decoder.keras",
+      "semilla": 43,
+      "parametros": 101520,
+      "bytes": 425626,
+      "sha256": "fc9f6f690149854535cc4555468ff2d8a0f014589fa3766e421214e81122b952"
+    },
+    {
+      "archivo": "semilla_43/VAE-16__encoder.keras",
+      "semilla": 43,
+      "parametros": 104608,
+      "bytes": 441758,
+      "sha256": "0a41ae07910d4e23a9aa647e45726573b374896be1a4238d4d6bf6a541d3bebc"
+    },
+    {
+      "archivo": "semilla_43/VAE-16__decoder.keras",
+      "semilla": 43,
+      "parametros": 103312,
+      "bytes": 432797,
+      "sha256": "e4600d1b7960a3f723f8e942fdb72eaaf95cbe830d940be2f5d9deac7220155a"
+    },
+    {
+      "archivo": "semilla_43/clasificador_auxiliar.keras",
+      "semilla": 43,
+      "parametros": 101770,
+      "bytes": 1244522,
+      "sha256": "bb88e4e53c12c23abcd301e469270efa4a16b9122637455a31853115ee99e244"
+    },
+    {
+      "archivo": "semilla_44/AE-16__autoencoder.keras",
+      "semilla": 44,
+      "parametros": 25888,
+      "bytes": 338597,
+      "sha256": "a5c1d17ad4d8bc6e95c5c6c877519115f4079525f08b9c9d4af35dd7cd00d234"
+    },
+    {
+      "archivo": "semilla_44/AE-2__autoencoder.keras",
+      "semilla": 44,
+      "parametros": 3922,
+      "bytes": 75002,
+      "sha256": "865c079fc93c9052876f23f21df4ba38ca551edc1ab25172b21860cec51770eb"
+    },
+    {
+      "archivo": "semilla_44/VAE-2__encoder.keras",
+      "semilla": 44,
+      "parametros": 100996,
+      "bytes": 427308,
+      "sha256": "113f778ce8ff0b7e92095b1f64824e9a5dd748dd45a6bcb78e84603aef1c8d92"
+    },
+    {
+      "archivo": "semilla_44/VAE-2__decoder.keras",
+      "semilla": 44,
+      "parametros": 101520,
+      "bytes": 425626,
+      "sha256": "9ca27f05ff1c4705faada63e3f5e137f420123a37d6c23f9af42a3260d2179cc"
+    },
+    {
+      "archivo": "semilla_44/VAE-16__encoder.keras",
+      "semilla": 44,
+      "parametros": 104608,
+      "bytes": 441758,
+      "sha256": "c2a24715e71a71a3e02aeb93baa37813cbc5b8d993b973ed9d75718cc8c334a6"
+    },
+    {
+      "archivo": "semilla_44/VAE-16__decoder.keras",
+      "semilla": 44,
+      "parametros": 103312,
+      "bytes": 432797,
+      "sha256": "e940913e99577cb21042aa01b45c4bcf6ccc03497158045e0a0cc6164cc151a6"
+    },
+    {
+      "archivo": "semilla_44/clasificador_auxiliar.keras",
+      "semilla": 44,
+      "parametros": 101770,
+      "bytes": 1244522,
+      "sha256": "d8ee8541140d4a86f414f3276c82e17eedc8572085c5741b809f910aa9bd2d94"
+    }
+  ]
+}

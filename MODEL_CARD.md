@@ -2,7 +2,7 @@
 
 ## Resumen
 
-Modelos pequeños de reconstrucción y generación de imágenes de prendas de 28×28 píxeles, entrenados con fines académicos en el LAB10 de INF-8239. Se comparan un autoencoder (AE) y un autoencoder variacional (VAE) con latentes de 2 y 16 dimensiones. **Recomendado: VAE-16 para generar muestras; VAE-2 solo para visualizar.**
+Modelos pequeños de reconstrucción y generación de imágenes de prendas de 28×28 píxeles, entrenados con fines académicos en el LAB10 de INF-8239. Se comparan un autoencoder (AE) y un autoencoder variacional (VAE) con latentes de 2 y 16 dimensiones. **Resultado exploratorio en este dominio (Fashion-MNIST): VAE-16 fue el mejor generador de los comparados; VAE-2 solo sirve para visualizar.**
 
 ## Detalles del modelo
 
@@ -44,7 +44,7 @@ Piso de ruido del Fréchet (real contra real): 3.8. Los 16 ejemplos de los panel
 - El AE muestreado con `N(0, I)` colapsa a casi una clase; el VAE no, porque su entrenamiento fuerza el espacio latente hacia esa distribución.
 - AE-16 con gaussiana ajustada produce muestras de calidad comparable a VAE-16 con menos costo.
 - VAE-2 confunde clases en 2 dimensiones (vestido contra pantalón; camiseta, camisa, suéter y abrigo se superponen).
-- Sin evidencia de memorización: ninguna copia exacta, brecha entrenamiento-prueba cercana a cero y vecinos distintos a simple vista. La señal de VAE-2 en la métrica de vecino más cercano es un artefacto de brillo (muestras oscuras cerca de prendas oscuras).
+- Sin evidencia de memorización: ninguna copia exacta, brecha entrenamiento-prueba cercana a cero y vecinos distintos a simple vista. La señal de VAE-2 en la métrica de vecino más cercano podría deberse al brillo (muestras oscuras cerca de prendas oscuras); es una hipótesis plausible, no una causa demostrada, y queda pendiente comprobarla con una distancia que no dependa del brillo.
 
 ## Límites y riesgos
 
@@ -61,11 +61,11 @@ Los datos no contienen personas. Si el mismo código se aplicara a datos persona
 
 ## Decisión de uso
 
-Usar **VAE-16** como generador de referencia del curso, **AE-16 con gaussiana ajustada** como alternativa barata y **VAE-2** únicamente para visualización. Uso académico, no productivo. Antes de cualquier otro dominio: más semillas, más épocas, métricas con red preentrenada, revisión humana y auditoría de privacidad.
+Como resultado exploratorio de este dominio, en el curso se usa **VAE-16** como generador de referencia, **AE-16 con gaussiana ajustada** como alternativa barata y **VAE-2** únicamente para visualización. Uso académico, no productivo; no se extrapola a otros dominios. Antes de cualquier otro dominio: más semillas, más épocas, métricas con red preentrenada, revisión humana y auditoría de privacidad.
 
 ## Reproducibilidad
 
-`uv sync --extra cpu` y `uv run python scripts/e06_evaluacion.py --seeds 42 43 44`. Detalles y pruebas en el README.
+`uv sync --extra cpu` y `uv run python scripts/e06_evaluacion.py --seeds 42 43 44`. Detalles y pruebas en el README. Los modelos entrenados (3 semillas) se conservan en `models/` con sus hashes en `models/MANIFEST.json`; `uv run python scripts/verificar_modelos.py` comprueba que cargan.
 
 ## Referencia
 

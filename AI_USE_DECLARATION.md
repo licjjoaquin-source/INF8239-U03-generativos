@@ -31,9 +31,10 @@ Claude (Anthropic), asistente conversacional, usado en la sesión de trabajo del
 ## Correcciones hechas a la salida de la IA
 
 - La distancia al vecino más cercano calculada con la fórmula expandida en `float32` no detectaba copias exactas (distancia cercana a 1e-3 en lugar de 0). Una prueba lo reveló y se corrigió recalculando la distancia exacta del vecino ganador.
-- La métrica de vecino más cercano sugería memorización en VAE-2. Al revisar las imágenes se vio que eran muestras oscuras cerca de prendas oscuras, y la interpretación se corrigió: no hay evidencia de memorización.
+- La métrica de vecino más cercano sugería memorización en VAE-2. Al revisar las imágenes se vio que eran muestras oscuras cerca de prendas oscuras, y la interpretación se corrigió: el brillo es una explicación plausible, no una causa demostrada, y no se encontró evidencia de memorización.
 - Se advirtió que comparar AE y VAE del laboratorio mezcla el objetivo con la capacidad (el AE no tiene capa oculta) y se declaró como límite.
 - Se añadió el control AE-2 y el muestreo del AE con una gaussiana ajustada para que la comparación con el VAE sea más justa.
+- Tras la devolución del profesor: el brillo se redactó como hipótesis, las recomendaciones quedaron como resultados exploratorios de este dominio y se conservaron los modelos entrenados en `models/`. Reejecuté la evaluación y comprobé con `scripts/verificar_modelos.py` que los modelos coinciden con su manifiesto y cargan.
 
 ## Responsabilidad
 

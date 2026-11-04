@@ -14,6 +14,7 @@ Uso (desde la carpeta del proyecto):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import platform
@@ -106,7 +107,8 @@ def train_ae(latent_dim, x_train, epochs, seed):
     seconds = perf_counter() - start
     encoder, decoder = split_autoencoder(tf, model)
     return {"kind": "AE", "latent": latent_dim, "seconds": seconds, "params": model.count_params(),
-            "size_kb": size_kb(model), "encode": lambda x: encoder.predict(x, verbose=0),
+            "size_kb": size_kb(model), "artifacts": {"autoencoder": model},
+            "encode": lambda x: encoder.predict(x, verbose=0),
             "decode": lambda z: decoder.predict(z, verbose=0)}
 
 
@@ -121,6 +123,7 @@ def train_vae(latent_dim, x_train, epochs, seed):
     return {"kind": "VAE", "latent": latent_dim, "seconds": seconds,
             "params": encoder.count_params() + decoder.count_params(),
             "size_kb": size_kb(encoder, decoder),
+            "artifacts": {"encoder": encoder, "decoder": decoder},
             "kl_last": float(history.history["kl"][-1]),
             "encode": lambda x: encoder.predict(x, verbose=0)[0],  # media posterior
             "decode": lambda z: decoder.predict(z, verbose=0)}
@@ -135,6 +138,21 @@ def train_classifier(x_train, y_train, seed):
     model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
     model.fit(x_train, y_train, epochs=3, batch_size=256, verbose=0)
     return model
+
+
+def save_models(models_dir: Path, seed: int, models: dict, classifier) -> list[dict]:
+    """Conserva los modelos entrenados (para revisiones futuras) y devuelve sus entradas del manifiesto."""
+    folder = models_dir / f"semilla_{seed}"
+    folder.mkdir(parents=True, exist_ok=True)
+    pieces = [(f"{name}__{part}", obj) for name, model in models.items() for part, obj in model["artifacts"].items()]
+    pieces.append(("clasificador_auxiliar", classifier))
+    entries = []
+    for key, obj in pieces:
+        path = folder / f"{key}.keras"
+        obj.save(path)
+        entries.append({"archivo": f"semilla_{seed}/{path.name}", "semilla": seed, "parametros": int(obj.count_params()),
+                        "bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+    return entries
 
 
 # ----------------------------------------------------------------------------- evaluación
@@ -277,7 +295,8 @@ def main():
         x_test, y_test = x_test[: max(2000, args.limit // 5)], y_test[: max(2000, args.limit // 5)]
     fixed_idx = fixed_indices(len(x_test), 16, FIXED_SEED)
     x_ref = x_test[:1000]
-    all_rows, first_seed_artifacts = [], None
+    all_rows, first_seed_artifacts, manifest = [], None, []
+    models_dir = ROOT / ("models_prueba" if args.limit else "models")  # la prueba rápida no pisa los modelos reales
 
     for position, seed in enumerate(args.seeds):
         say(f"=== Semilla {seed} ({position + 1}/{len(args.seeds)})")
@@ -288,6 +307,7 @@ def main():
                   "AE-2": train_ae(2, x_train, args.epochs_ae, seed),
                   "VAE-2": train_vae(2, x_train, args.epochs_vae, seed),
                   "VAE-16": train_vae(16, x_train, args.epochs_vae, seed)}
+        manifest += save_models(models_dir, seed, models, classifier)
         # El AE no tiene distribución a priori: se prueba con N(0,I) (lo "ingenuo")
         # y con una gaussiana ajustada a los latentes reales de entrenamiento.
         fitted = {}
@@ -321,6 +341,10 @@ def main():
             first_seed_artifacts = {"figures_seed": seed}
 
     summary = write_tables(all_rows, reports)
+    (models_dir / "MANIFEST.json").write_text(json.dumps(
+        {"tensorflow": tf.__version__, "semillas": args.seeds, "epocas_ae": args.epochs_ae, "epocas_vae": args.epochs_vae,
+         "nota": "Modelos entrenados de la evaluación E06 (formato .keras). Verificar con scripts/verificar_modelos.py",
+         "archivos": manifest}, indent=2, ensure_ascii=False), encoding="utf-8")
     reference_floor = frechet_distance_pixels(x_test[:1000], x_test[1000:2000])
     info = {
         "seeds": args.seeds, "epochs_ae": args.epochs_ae, "epochs_vae": args.epochs_vae, "n_generated": args.n_gen,
